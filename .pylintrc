@@ -1,0 +1,6 @@
+
+[TYPECHECK]
+ignored-classes=Tensor
+
+[MISCELLANEOUS]
+notes=ignore

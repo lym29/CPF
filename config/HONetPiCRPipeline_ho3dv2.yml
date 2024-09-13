@@ -1,0 +1,74 @@
+DATASET:
+  TRAIN:
+    TYPE: HO3D
+    VERSION: V2
+    DATA_MODE: 3d_hand_obj_contact
+    DATA_ROOT: data
+    DATA_SPLIT: train
+    MODE_SPLIT: official
+
+    TRANSFORM:
+      TYPE: SimpleTransform3DMANOObject
+      AUG: True
+      CENTER_JIT: 0.05
+      SCALE_JIT: 0.1
+      COLOR_JIT: 0.3
+      ROT_JIT: 5
+      ROT_PROB: 0.5
+      OCCLUSION: False
+      OCCLUSION_RATIO: 0
+
+  TEST:
+    TYPE: HO3D
+    VERSION: V2
+    DATA_MODE: 3d_hand_obj
+    DATA_ROOT: data
+    DATA_SPLIT: test
+    MODE_SPLIT: ho3d_paper
+
+    TRANSFORM:
+      TYPE: SimpleTransform3DMANOObject
+      AUG: False
+
+DATA_PRESET:
+  USE_CACHE: True
+  USE_FULL_IMAGE: True
+  BBOX_EXPAND_RATIO: 1.0
+  IMAGE_SIZE: [640, 480]
+  CENTER_IDX: 9
+  FILTER_DIST_THRESH: 0.005
+
+MODEL:
+  TYPE: HONetPiCRPipeline
+  HONET:
+    TYPE: HONet
+    PRETRAINED: checkpoints/legacy/honet/ho3dv2/HONet_copy.pth.tar
+    PRETRAINED_WITH_HO3D_EXTR: True
+    MANO_NCOMPS: 15
+    RESNET_VERSION: 18
+    MANO_NEURONS: [512, 512]
+    USE_FHB_ADAPTOR: False
+    OBJ_TRANS_FACTOR: 100
+    OBJ_SCALE_FACTOR: 0.0001
+
+  PICR:
+    TYPE: PiCRI
+    PRETRAINED: checkpoints/legacy/picr/ho3dv2/PiCR_copy.pth.tar
+    HG_STACKS: 2
+    HG_BLOCKS: 1
+    HG_CLASSES: 64
+    MEAN_OFFSET: 0.010
+    STD_OFFSET: 0.005
+    VC_THRESH: 0.8
+    OBJ_VERTS_MODE: pred
+    OBJ_SCALE_FACTOR: 0.0001
+
+CALLBACKS:
+  DRAW:
+    TYPE: DrawCallback
+    IMG_DRAW_DIR: tmp/draw/honet+picr/ho3dv2/
+    DRAW_CONTACT: True
+  DUMP:
+    TYPE: DumperCallback
+    DUMP_PREFIX: tmp/pred/honet+picr/ho3dv2/dumped_pred
+    

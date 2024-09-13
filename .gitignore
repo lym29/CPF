@@ -1,0 +1,35 @@
+
+.idea/*
+.vscode/*
+exp
+exp/**
+tmp
+tmp/**
+__pycache__/
+
+
+assets/*
+# softlink
+!assets/.gitkeep
+!assets/anchor
+!assets/closed_hand
+!assets/hand_palm_full.txt
+
+data/*
+!data/.gitkeep
+# softlink
+/data
+
+common/*
+CPF_checkpoints/*
+
+checkpoints/*
+!checkpoints/.gitkeep
+
+thirdparty/ArtiBoost
+
+
+# C extensions
+*.so
+build/
+develop-eggs/

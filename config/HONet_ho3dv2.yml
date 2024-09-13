@@ -1,0 +1,59 @@
+DATASET:
+  TRAIN:
+    TYPE: HO3D
+    VERSION: V2
+    DATA_MODE: 3d_hand_obj
+    DATA_ROOT: data
+    DATA_SPLIT: trainval
+    MODE_SPLIT: official
+    FILTER_INVISIBLE_HANDS: True
+
+    TRANSFORM:
+      TYPE: SimpleTransform3DMANOObject
+      AUG: True
+      CENTER_JIT: 0.05
+      SCALE_JIT: 0.1
+      COLOR_JIT: 0.3
+      ROT_JIT: 5
+      ROT_PROB: 0.5
+      OCCLUSION: False
+      OCCLUSION_RATIO: 0
+
+  TEST:
+    TYPE: HO3D
+    VERSION: V2
+    DATA_MODE: 3d_hand_obj
+    DATA_ROOT: data
+    DATA_SPLIT: test
+    MODE_SPLIT: official
+    FILTER_INVISIBLE_HANDS: True
+
+    TRANSFORM:
+      TYPE: SimpleTransform3DMANOObject
+      AUG: False
+
+
+DATA_PRESET:
+  USE_CACHE: True
+  USE_FULL_IMAGE: True
+  BBOX_EXPAND_RATIO: 1.0
+  IMAGE_SIZE: [640, 480]
+  CENTER_IDX: 9
+
+
+MODEL:
+  TYPE: HONet
+  PRETRAINED: checkpoints/legacy/honet/ho3dv2/HONet_copy.pth.tar
+  PRETRAINED_WITH_HO3D_EXTR: True
+  MANO_NCOMPS: 15
+  RESNET_VERSION: 18
+  MANO_NEURONS: [512, 512]
+  USE_FHB_ADAPTOR: False
+  OBJ_TRANS_FACTOR: 100
+  OBJ_SCALE_FACTOR: 0.0001
+
+CALLBACKS:
+  DRAW:
+    TYPE: DrawCallback
+    IMG_DRAW_DIR: tmp/draw/honet/ho3dv2/
+    DRAW_CONTACT: False

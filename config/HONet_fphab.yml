@@ -1,0 +1,61 @@
+DATASET:
+  TRAIN:
+    TYPE: FilteredFPHAB
+    DATA_MODE: 3d_hand_obj
+    DATA_ROOT: data
+    DATA_SPLIT: train
+    MODE_SPLIT: actions
+    FILTER_INVISIBLE_HANDS: True
+    REDUCE_SIZE: True
+    USE_JOINTS_MAGNETIC: True
+
+    TRANSFORM:
+      TYPE: SimpleTransform3DMANOObject
+      AUG: True
+      CENTER_JIT: 0.05
+      SCALE_JIT: 0.1
+      COLOR_JIT: 0.3
+      ROT_JIT: 5
+      ROT_PROB: 0.5
+      OCCLUSION: False
+      OCCLUSION_RATIO: 0
+
+  TEST:
+    TYPE: FilteredFPHAB
+    DATA_MODE: 3d_hand_obj
+    DATA_ROOT: data
+    DATA_SPLIT: test
+    MODE_SPLIT: actions
+    FILTER_INVISIBLE_HANDS: True
+    REDUCE_SIZE: True
+    USE_JOINTS_MAGNETIC: True
+    TRANSFORM:
+      TYPE: SimpleTransform3DMANOObject
+      AUG: False
+
+DATA_PRESET:
+  USE_CACHE: False
+  USE_FULL_IMAGE: True
+  BBOX_EXPAND_RATIO: 1.0
+  IMAGE_SIZE: [480, 270]
+  CENTER_IDX: 9
+  FILTER_NO_CONTACT: True
+  FILTER_DIST_THRESH: 0.005
+
+
+MODEL:
+  TYPE: HONet
+  PRETRAINED: checkpoints/legacy/honet/fphab/HONet_copy.pth.tar
+  PRETRAINED_WITH_HO3D_EXTR: False
+  USE_FHB_ADAPTOR: True
+  MANO_NCOMPS: 15
+  RESNET_VERSION: 18
+  MANO_NEURONS: [512, 512]
+  OBJ_TRANS_FACTOR: 100
+  OBJ_SCALE_FACTOR: 0.0001
+
+CALLBACKS:
+  DRAW:
+    TYPE: DrawCallback
+    IMG_DRAW_DIR: tmp/draw/honet/fphab
+    DRAW_CONTACT: False

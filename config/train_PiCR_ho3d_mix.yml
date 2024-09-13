@@ -1,0 +1,99 @@
+DATASET:
+  TRAIN: 
+    TYPE: MIX
+    LENGTH: 20_000
+    MIX: 
+      - TYPE: HO3D
+        MIX_RATIO: 0.3
+        VERSION: V2
+        DATA_MODE: 3d_hand_obj_contact
+        DATA_ROOT: data
+        DATA_SPLIT: train
+        MODE_SPLIT: official
+
+      - TYPE: HO3DYCBA
+        MIX_RATIO: 0.2
+        VERSION: V2
+        DATA_MODE: 3d_hand_obj_contact
+        DATA_ROOT: data
+        DATA_SPLIT: train
+        MODE_SPLIT: official
+
+      - TYPE: HO3DSynthT
+        MIX_RATIO: 0.2
+        VERSION: V2
+        SYNTH_ROUND: 0
+        DATA_MODE: 3d_hand_obj_contact
+        DATA_ROOT: data
+        DATA_SPLIT: train
+        MODE_SPLIT: official
+      
+      - TYPE: FilteredDexYCB
+        MIX_RATIO: 0.3
+        DATA_MODE: 3d_hand_obj_contact
+        DATA_ROOT: data
+        DATA_SPLIT: train
+        SETUP: s0
+        LOAD_OBJ_ON_INIT: True
+        USE_OBJ_OUTSRC: True
+        SELECTED_OBJ_IDS: 
+          - 010_potted_meat_can 
+          - 006_mustard_bottle
+          - 021_bleach_cleanser
+
+    TRANSFORM: 
+      TYPE: SimpleTransform3DMANOObject
+      AUG: True
+      CENTER_JIT: 0.05
+      SCALE_JIT: 0.1
+      COLOR_JIT: 0.3
+      ROT_JIT: 20
+      ROT_PROB: 0.8
+      OCCLUSION: False
+      OCCLUSION_RATIO: 0
+  
+  VAL: null
+
+DATA_PRESET:
+  USE_CACHE: True
+  USE_FULL_IMAGE: False
+  BBOX_EXPAND_RATIO: 2.0
+  IMAGE_SIZE: [256, 256]
+  CENTER_IDX: 9
+  FILTER_NO_CONTACT: True
+  FILTER_DIST_THRESH: 0.005
+
+MODEL: 
+  TYPE: PiCRI
+  PRETRAINED: null
+  HG_STACKS: 2
+  HG_BLOCKS: 1
+  HG_CLASSES: 64
+  MAXIMAL_ANGLE: 15
+  MEAN_OFFSET: 0.010
+  STD_OFFSET: 0.01
+  VC_THRESH: 0.8
+  OBJ_VERTS_MODE: gt
+  OBJ_SCALE_FACTOR: 0.0001
+
+  LOSS: 
+    TYPE: CPFContactLoss
+    CONTACT_LAMBDA_VERTEX_CONTACT: 10.0
+    CONTACT_LAMBDA_CONTACT_REGION: 10.0
+    CONTACT_LAMBDA_ANCHOR_ELASTI: 1.0
+    FOCAL_LOSS_ALPHA: 0.90
+    FOCAL_LOSS_GAMMA: 2.0
+    REGION_FOCAL_TYPE: ho3d
+
+TRAIN:
+  MANUAL_SEED: 1
+  CONV_REPEATABLE: true
+  EPOCH: 100
+  OPTIMIZER: adam
+  WEIGHT_DECAY: 0.0
+  LR: 0.001
+  FIND_UNUSED_PARAMETERS: False
+  GRAD_CLIP_ENABLED: true
+  GRAD_CLIP:
+    TYPE: 2
+    NORM: 1.0
