@@ -11,15 +11,42 @@ We test the installation with
 * CUDA == 11.3, V11.3.58
 
 ```bash
-$ conda env create -f environment.yaml
+$ conda env create -f environment.yml
 $ conda activate cpf
 ```
 
 ### Install dependencies
 ```bash
-$ pip install -r requirements.txt
-$ pip install -r requirements@git.txt
-$ pip install pytorch3d --no-index --no-cache-dir --find-links https://dl.fbaipublicfiles.com/pytorch3d/packaging/wheels/py310_cu113_pyt1110/download.html
+# install open3d
+# login into GPU node first
+cd ~/open3d-whl
+pip install open3d-0.18.0-cp310-cp310-manylinux_2_27_x86_64.whl open3d
+```
+
+```bash
+# install opendr
+mkdir ./whl_files
+cd ./whl_files
+pip download opendr
+conda install menpo::osmesa
+# login into GPU node
+cd ~/projects/CPF/whl_files
+pip install *.whl
+pip install chumpy-0.70.tar.gz
+pip install opendr-0.78.tar.gz
+```
+```bash
+pip install -r requirements.txt
+pip install -r requirements@git.txt
+cd thirdparty
+git clone https://github.com/lixiny/manotorch.git
+# login into GPU node
+cd manotorch
+pip install .
+```
+```bash
+# pytorch3d
+pip install pytorch3d --no-index --no-cache-dir --find-links https://dl.fbaipublicfiles.com/pytorch3d/packaging/wheels/py310_cu113_pyt1110/download.html
 ```
 
 
@@ -27,7 +54,7 @@ $ pip install pytorch3d --no-index --no-cache-dir --find-links https://dl.fbaipu
 
 #### dex-ycb-toolkit
 ```bash
-$ cd thirdparty
+cd thirdparty
 
 # create a __init__.py in dex_ycb_toolkit
 $ touch ./dex-ycb-toolkit/dex_ycb_toolkit/__init__.py

@@ -1,2 +1,2 @@
 chumpy@git+https://github.com/lixiny/chumpy.git 
-manotorch@git+https://github.com/lixiny/manotorch.git
+# manotorch@git+https://github.com/lixiny/manotorch.git

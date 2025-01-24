@@ -1,6 +1,6 @@
 numpy==1.24.4
 opendr==0.78
-open3d==0.17.0
+# open3d==0.17.0
 opencv-python
 imageio
 trimesh
